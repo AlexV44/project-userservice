@@ -6,10 +6,12 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "users")
@@ -20,15 +22,16 @@ import java.util.List;
 @SuperBuilder
 public class User extends BaseAuditEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue
+    @UuidGenerator(style = UuidGenerator.Style.TIME)
+    private UUID id;
 
     @NotBlank(message = "Provide valid name")
-    @Column(name = "name", nullable = false, length = 20)
+    @Column(name = "name", nullable = false, length = 30)
     private String name;
 
     @NotBlank(message = "Provide valid surname")
-    @Column(name = "surname", nullable = false, length = 40)
+    @Column(name = "surname", nullable = false, length = 50)
     private String surname;
 
     @NotBlank
