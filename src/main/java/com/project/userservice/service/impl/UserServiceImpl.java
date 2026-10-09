@@ -24,7 +24,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
-
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
@@ -62,8 +61,6 @@ public class UserServiceImpl implements UserService {
         var spec = Specification
                 .where(UserSpecification.hasName(name))
                 .and(UserSpecification.hasSurname(surname));
-        return userRepository.findAll(spec, pageable)
-                .map(userMapper::toDto);
     }
 
     @Override
@@ -86,7 +83,6 @@ public class UserServiceImpl implements UserService {
         }
 
         var user = findUserByIdOrThrow(id);
-
         return userMapper.toDto(user);
     }
 
