@@ -4,5 +4,4 @@ public enum PaymentCardStatus {
     ACTIVE,
     LOCKED,
     PENDING,
-    TERMINATED
 }
