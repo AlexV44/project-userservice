@@ -1,5 +1,6 @@
 package com.project.userservice.entity;
 
+import com.project.userservice.entity.audit.BaseAuditEntity;
 import com.project.userservice.entity.enums.PaymentCardStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Future;
@@ -7,6 +8,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDate;
@@ -18,8 +20,8 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class PaymentCard {
+@SuperBuilder
+public class PaymentCard extends BaseAuditEntity {
     @Id
     @GeneratedValue
     @UuidGenerator(style = UuidGenerator.Style.TIME)
@@ -44,9 +46,9 @@ public class PaymentCard {
     private LocalDate expirationDate;
 
     @Builder.Default
-    @Enumerated(EnumType.STRING)
     @NotNull(message = "Payment card must have a status")
     @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING)
     private PaymentCardStatus status = PaymentCardStatus.PENDING;
 
     @NotNull

@@ -77,7 +77,7 @@ public class PaymentCardServiceImpl implements PaymentCardService {
     @Override
     @Transactional
     public PaymentCardResponse updateCardStatus(UUID id, PaymentCardStatus status) {
-       int updated = paymentCardRepository.updateCardStatus(id, status);
+       int updated = paymentCardRepository.updateCardStatus(id, status.name());
 
        if(updated == 0) {
            throw new PaymentCardNotFoundException(id);

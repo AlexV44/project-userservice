@@ -17,5 +17,5 @@ public interface PaymentCardRepository extends JpaRepository<PaymentCard, UUID> 
 
     @Modifying
     @Query(value = "UPDATE payment_cards SET status = :status WHERE id = :id", nativeQuery = true)
-    int updateCardStatus(@Param("id") UUID id, @Param("status") PaymentCardStatus status);
+    int updateCardStatus(@Param("id") UUID id, @Param("status") String status);
 }
