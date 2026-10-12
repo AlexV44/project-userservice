@@ -61,6 +61,7 @@ public class UserServiceImpl implements UserService {
         var spec = Specification
                 .where(UserSpecification.hasName(name))
                 .and(UserSpecification.hasSurname(surname));
+        return userRepository.findAll(spec, pageable).map(userMapper::toDto);
     }
 
     @Override
