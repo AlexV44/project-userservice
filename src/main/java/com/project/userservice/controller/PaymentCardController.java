@@ -1,8 +1,8 @@
 package com.project.userservice.controller;
 
 import com.project.userservice.dto.request.PaymentCardRequest;
-import com.project.userservice.dto.request.PaymentCardStatusUpdateRequest;
 import com.project.userservice.dto.response.PaymentCardResponse;
+import com.project.userservice.dto.response.UserResponse;
 import com.project.userservice.service.PaymentCardService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -49,12 +49,12 @@ public class PaymentCardController {
         return ResponseEntity.ok(cardsPage);
     }
 
-    @PatchMapping("/{id}/status")
-    public ResponseEntity<PaymentCardResponse> updateCardStatus(
+    @PatchMapping("/{id}/active")
+    public ResponseEntity<PaymentCardResponse> updateUserActiveStatus(
             @PathVariable UUID id,
-            @Valid @RequestBody PaymentCardStatusUpdateRequest request) {
-        PaymentCardResponse response = cardService.updateCardStatus(id, request.status());
-        return ResponseEntity.ok(response);
+            @RequestParam boolean active) {
+        PaymentCardResponse updatedCard = cardService.updateCardActiveStatus(id, active);
+        return ResponseEntity.ok(updatedCard);
     }
 
     @DeleteMapping("/user/{userId}/{cardId}")

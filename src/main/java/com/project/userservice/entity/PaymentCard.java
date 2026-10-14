@@ -1,12 +1,10 @@
 package com.project.userservice.entity;
 
 import com.project.userservice.entity.audit.BaseAuditEntity;
-import com.project.userservice.entity.enums.PaymentCardStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.UuidGenerator;
@@ -27,14 +25,9 @@ public class PaymentCard extends BaseAuditEntity {
     @UuidGenerator(style = UuidGenerator.Style.TIME)
     private UUID id;
 
-    @NotBlank(message = "Payment card gateway token is required")
-    @Column(name = "gateway_token", nullable = false, unique = true)
-    private String gatewayToken;
-
-    @NotBlank(message = "Last 4 digits are required")
-    @Size(min = 4, max = 4, message = "Last 4 digits must be exactly 4 numbers")
-    @Column(name = "last_4", nullable = false, length = 4)
-    private String last4;
+    @NotBlank(message = "Payment card number is required")
+    @Column(name = "number", nullable = false, unique = true)
+    private String number;
 
     @NotBlank(message = "Cardholder name is required")
     @Column(name = "holder", nullable = false)
@@ -45,11 +38,10 @@ public class PaymentCard extends BaseAuditEntity {
     @Column(name = "expiration_date", nullable = false)
     private LocalDate expirationDate;
 
+    @NotNull
     @Builder.Default
-    @NotNull(message = "Payment card must have a status")
-    @Column(name = "status", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private PaymentCardStatus status = PaymentCardStatus.PENDING;
+    @Column(name = "active", nullable = false)
+    private boolean active = true;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)

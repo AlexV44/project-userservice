@@ -2,6 +2,7 @@ package com.project.userservice.service.impl;
 
 import com.project.userservice.dto.request.PaymentCardRequest;
 import com.project.userservice.dto.response.PaymentCardResponse;
+import com.project.userservice.dto.response.UserResponse;
 import com.project.userservice.entity.PaymentCard;
 import com.project.userservice.entity.User;
 import com.project.userservice.entity.enums.PaymentCardStatus;
@@ -76,16 +77,16 @@ public class PaymentCardServiceImpl implements PaymentCardService {
 
     @Override
     @Transactional
-    public PaymentCardResponse updateCardStatus(UUID id, PaymentCardStatus status) {
-       int updated = paymentCardRepository.updateCardStatus(id, status.name());
+    public PaymentCardResponse updateCardActiveStatus(UUID id, boolean active) {
+        int updatedCard = paymentCardRepository.updateCardActiveStatus(id, active);
 
-       if(updated == 0) {
-           throw new PaymentCardNotFoundException(id);
-       }
+        if (updatedCard == 0) {
+            throw new PaymentCardNotFoundException(id);
+        }
 
-       PaymentCard card = findCardByIdOrThrow(id);
-
-       return paymentCardMapper.toDto(card);
+        return paymentCardRepository.findById(id)
+                .map(paymentCardMapper::toDto)
+                .orElseThrow(() -> new PaymentCardNotFoundException(id));
     }
 
     @Override

@@ -12,6 +12,7 @@ public record UserResponse(
         String name,
         String surname,
         String email,
+        boolean active,
         UserStatus status,
         LocalDate birthday,
         List<PaymentCardResponse> paymentCards,

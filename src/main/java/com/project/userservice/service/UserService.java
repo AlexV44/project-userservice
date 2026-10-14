@@ -16,7 +16,7 @@ public interface UserService {
     UserResponse getUserByEmail(String email);
     Page<UserResponse> searchUsers(String name, String surname, Pageable pageable);
     UserResponse updateUser(UUID id, UserUpdateRequest dto);
-    UserResponse updateUserStatus(UUID id, UserStatus status);
+    UserResponse updateUserActiveStatus(UUID id, boolean active);
     void deleteUser(UUID id);
 
 }

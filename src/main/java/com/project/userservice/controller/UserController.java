@@ -1,7 +1,6 @@
 package com.project.userservice.controller;
 
 import com.project.userservice.dto.request.UserCreateRequest;
-import com.project.userservice.dto.request.UserStatusUpdateRequest;
 import com.project.userservice.dto.request.UserUpdateRequest;
 import com.project.userservice.dto.response.UserResponse;
 import com.project.userservice.service.UserService;
@@ -58,11 +57,11 @@ public class UserController {
         return ResponseEntity.ok(updatedUser);
     }
 
-    @PatchMapping("/{id}/status")
-    public ResponseEntity<UserResponse> updateUserStatus(
+    @PatchMapping("/{id}/active")
+    public ResponseEntity<UserResponse> updateUserActiveStatus(
             @PathVariable UUID id,
-            @Valid @RequestBody UserStatusUpdateRequest request) {
-        UserResponse updatedUser = userService.updateUserStatus(id, request.status());
+            @RequestParam boolean active) {
+        UserResponse updatedUser = userService.updateUserActiveStatus(id, active);
         return ResponseEntity.ok(updatedUser);
     }
 

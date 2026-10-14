@@ -41,13 +41,12 @@ public class User extends BaseAuditEntity {
 
     @NotNull
     @Builder.Default
-    @Column(name = "status", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private UserStatus status = UserStatus.PENDING;
+    @Column(name = "active", nullable = false)
+    private boolean active = true;
 
     @Past
     @NotNull
-    @Column(name = "birthday", nullable = false)
+    @Column(name = "birth_day", nullable = false)
     private LocalDate birthday;
 
     @Size(max = 5, message = "One user should have no more than 5 cards")
