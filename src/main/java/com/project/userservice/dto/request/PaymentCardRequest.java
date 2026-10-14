@@ -7,12 +7,8 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 
 public record PaymentCardRequest(
-        @NotBlank(message = "Gateway token is required")
-        String gatewayToken,
-
-        @NotBlank(message = "Last 4 digits are required")
-        @Size(min = 4, max = 4, message = "Must be exactly 4 digits")
-        String last4,
+        @NotBlank(message = "Number is required")
+        String number,
 
         @NotBlank(message = "Cardholder name is required")
         String holder,

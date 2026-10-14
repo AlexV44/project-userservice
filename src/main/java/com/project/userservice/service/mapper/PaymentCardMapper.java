@@ -12,7 +12,7 @@ import java.util.List;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface PaymentCardMapper {
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "status", ignore = true)
+    @Mapping(target = "active", ignore = true)
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)

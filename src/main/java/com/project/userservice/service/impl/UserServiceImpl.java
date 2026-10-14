@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
         }
 
         var user = userMapper.toEntity(dto);
-        user.setStatus(UserStatus.PENDING);
+        user.setActive(true);
 
         var savedUser = userRepository.save(userMapper.toEntity(dto));
 
@@ -76,22 +76,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserResponse updateUserStatus(UUID id, UserStatus status) {
-        int updated = userRepository.updateUserStatus(id, status);
+    public UserResponse updateUserActiveStatus(UUID id, boolean active) {
+        int updatedCount = userRepository.updateUserActiveStatus(id, active);
 
-        if(updated == 0) {
+        if (updatedCount == 0) {
             throw new UserNotFoundException(id);
         }
 
-        var user = findUserByIdOrThrow(id);
-        return userMapper.toDto(user);
+        return userRepository.findById(id)
+                .map(userMapper::toDto)
+                .orElseThrow(() -> new UserNotFoundException(id));
     }
 
     @Override
     @Transactional
     public void deleteUser(UUID id) {
         var user = findUserByIdOrThrow(id);
-        user.setStatus(UserStatus.DEACTIVATED);
+        userRepository.deleteById(user.getId());
     }
 
     private User findUserByIdOrThrow(UUID id) {

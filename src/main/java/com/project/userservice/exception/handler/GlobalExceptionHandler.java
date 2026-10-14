@@ -8,10 +8,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.Instant;
 
-@RestControllerAdvice
+@RestControllerAdvice(basePackages = "com.project.userservice.controller")
 public class GlobalExceptionHandler {
     @ExceptionHandler(BaseHttpException.class)
     public ProblemDetail handleBaseException(BaseHttpException ex) {
+        ex.printStackTrace();
         var problemDetail = ProblemDetail.forStatusAndDetail(ex.getStatus(), ex.getMessage());
         problemDetail.setTitle("Business error");
 
@@ -22,6 +23,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ProblemDetail handleUnhandledException(Exception ex) {
+        ex.printStackTrace();
         var problemDetail = ProblemDetail.forStatusAndDetail(
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 "Unpredictable error thrown"

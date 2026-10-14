@@ -8,10 +8,9 @@ import java.util.UUID;
 
 public record PaymentCardResponse(
         UUID id,
-        String last4,
         String holder,
         LocalDate expirationDate,
-        PaymentCardStatus status,
+        boolean active,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {}

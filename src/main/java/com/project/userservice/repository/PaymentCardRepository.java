@@ -12,7 +12,9 @@ import java.util.UUID;
 public interface PaymentCardRepository extends JpaRepository<PaymentCard, UUID> {
     List<PaymentCard> findAllPaymentCardsByUserId(UUID userId);
 
-    @Query(value = "UPDATE payment_cards SET status = :status WHERE id = :id", nativeQuery = true)
-    void updatePaymentCardStatus(@Param("id") UUID id, @Param("status")PaymentCardStatus status);
-    
+    long countByUserId(UUID userId);
+
+    @Modifying
+    @Query(value = "UPDATE payment_cards SET active = :active WHERE id = :id", nativeQuery = true)
+    int updateCardActiveStatus(@Param("id") UUID id, @Param("active") boolean active);
 }

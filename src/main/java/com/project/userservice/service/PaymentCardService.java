@@ -14,6 +14,6 @@ public interface PaymentCardService {
     PaymentCardResponse getCardById(UUID id);
     List<PaymentCardResponse> getAllCardsByUserId(UUID userId);
     Page<PaymentCardResponse> getAllCards(Pageable pageable);
-    PaymentCardResponse updateCardStatus(UUID id, PaymentCardStatus status);
+    PaymentCardResponse updateCardActiveStatus(UUID id, boolean active);
     void deleteCard(UUID userId, UUID cardId);
 }
