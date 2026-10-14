@@ -77,8 +77,13 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserResponse updateUserStatus(UUID id, UserStatus status) {
+        int updated = userRepository.updateUserStatus(id, status);
+
+        if(updated == 0) {
+            throw new UserNotFoundException(id);
+        }
+
         var user = findUserByIdOrThrow(id);
-        user.setStatus(status);
         return userMapper.toDto(user);
     }
 
