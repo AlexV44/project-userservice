@@ -5,9 +5,10 @@ import com.project.userservice.entity.enums.UserStatus;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 public record UserResponse(
-        Long id,
+        UUID id,
         String name,
         String surname,
         String email,

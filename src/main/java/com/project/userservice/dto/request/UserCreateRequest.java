@@ -1,17 +1,16 @@
 package com.project.userservice.dto.request;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.*;
 
 import java.time.LocalDate;
 
 public record UserCreateRequest(
         @NotBlank(message = "Name is required")
+        @Size(min = 2, max = 30)
         String name,
 
         @NotBlank(message = "Surname is required")
+        @Size(min = 2, max = 50)
         String surname,
 
         @NotBlank(message = "Email is required")

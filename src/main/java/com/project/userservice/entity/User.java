@@ -50,7 +50,7 @@ public class User extends BaseAuditEntity {
     @Column(name = "birthday", nullable = false)
     private LocalDate birthday;
 
-    //@Size()
+    @Size(max = 5, message = "One user should have no more than 5 cards")
     @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<PaymentCard> paymentCards = new ArrayList<>();
