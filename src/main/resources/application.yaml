@@ -4,6 +4,11 @@ spring:
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:dev}
 
+  cache:
+    type: redis
+    redis:
+      time-to-live: 600000
+
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.xml
     enabled: true
