@@ -12,6 +12,7 @@ import com.project.userservice.repository.specification.UserSpecification;
 import com.project.userservice.service.UserService;
 import com.project.userservice.service.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -21,6 +22,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Transactional(readOnly = true)
@@ -29,6 +31,7 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final CacheManager cacheManager;
 
     @Override
     @Transactional
@@ -76,7 +79,14 @@ public class UserServiceImpl implements UserService {
     public UserResponse updateUser(UUID id, UserUpdateRequest dto) {
         var user = findUserByIdOrThrow(id);
 
+        String oldEmail = user.getEmail();
+
         userMapper.updateUserFromDto(dto, user);
+
+        if (oldEmail != null && !oldEmail.equals(user.getEmail())) {
+            Optional.ofNullable(cacheManager.getCache("users"))
+                    .ifPresent(cache -> cache.evict(oldEmail));
+        }
 
         return userMapper.toDto(user);
     }
@@ -91,9 +101,12 @@ public class UserServiceImpl implements UserService {
             throw new UserNotFoundException(id);
         }
 
-        return userRepository.findById(id)
-                .map(userMapper::toDto)
-                .orElseThrow(() -> new UserNotFoundException(id));
+        var user = findUserByIdOrThrow(id);
+
+        Optional.ofNullable(cacheManager.getCache("users"))
+                .ifPresent(cache -> cache.evict(user.getEmail()));
+
+        return userMapper.toDto(user);
     }
 
     @Override
@@ -101,7 +114,13 @@ public class UserServiceImpl implements UserService {
     @CacheEvict(value = "users", key = "#id")
     public void deleteUser(UUID id) {
         var user = findUserByIdOrThrow(id);
+
+        String email = user.getEmail();
+
         userRepository.deleteById(user.getId());
+
+        Optional.ofNullable(cacheManager.getCache("users"))
+                .ifPresent(cache -> cache.evict(email));
     }
 
     private User findUserByIdOrThrow(UUID id) {
