@@ -12,6 +12,9 @@ import com.project.userservice.repository.specification.UserSpecification;
 import com.project.userservice.service.UserService;
 import com.project.userservice.service.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -29,6 +32,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
+    @CachePut(value = "users", key = "#result.id")
     public UserResponse createUser(UserCreateRequest dto) {
         if(userRepository.existsByEmail(dto.email())) {
             throw new EmailAlreadyExistsException(dto.email());
@@ -43,6 +47,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Cacheable(value = "users", key = "#id")
     public UserResponse getUserById(UUID id) {
         return userRepository.findById(id)
                 .map(userMapper::toDto)
@@ -50,6 +55,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Cacheable(value = "users", key = "#email")
     public UserResponse getUserByEmail(String email) {
         return userRepository.findByEmail(email)
                 .map(userMapper::toDto)
@@ -66,6 +72,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
+    @CachePut(value = "users", key = "#id")
     public UserResponse updateUser(UUID id, UserUpdateRequest dto) {
         var user = findUserByIdOrThrow(id);
 
@@ -76,6 +83,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
+    @CachePut(value = "users", key = "#id")
     public UserResponse updateUserActiveStatus(UUID id, boolean active) {
         int updatedCount = userRepository.updateUserActiveStatus(id, active);
 
@@ -90,6 +98,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "users", key = "#id")
     public void deleteUser(UUID id) {
         var user = findUserByIdOrThrow(id);
         userRepository.deleteById(user.getId());
