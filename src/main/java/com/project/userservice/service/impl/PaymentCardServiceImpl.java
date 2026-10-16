@@ -14,6 +14,9 @@ import com.project.userservice.repository.UserRepository;
 import com.project.userservice.service.PaymentCardService;
 import com.project.userservice.service.mapper.PaymentCardMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -33,6 +36,7 @@ public class PaymentCardServiceImpl implements PaymentCardService {
 
     @Override
     @Transactional
+    @CachePut(value = "cards", key = "#result.id")
     public PaymentCardResponse addCardToUser(UUID userId, PaymentCardRequest dto) {
         long count = paymentCardRepository.countByUserId(userId);
 
@@ -52,6 +56,7 @@ public class PaymentCardServiceImpl implements PaymentCardService {
     }
 
     @Override
+    @Cacheable(value = "cards", key = "#id")
     public PaymentCardResponse getCardById(UUID id) {
         return paymentCardRepository.findById(id)
                 .map(paymentCardMapper::toDto)
@@ -77,6 +82,7 @@ public class PaymentCardServiceImpl implements PaymentCardService {
 
     @Override
     @Transactional
+    @CachePut(value = "cards", key = "#id")
     public PaymentCardResponse updateCardActiveStatus(UUID id, boolean active) {
         int updatedCard = paymentCardRepository.updateCardActiveStatus(id, active);
 
@@ -91,11 +97,13 @@ public class PaymentCardServiceImpl implements PaymentCardService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "cards", key = "#cardId")
     public void deleteCard(UUID userId, UUID cardId) {
         PaymentCard card = findCardByIdOrThrow(cardId);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
         user.removePaymentCard(card);
+        paymentCardRepository.delete(card);
     }
 
     private PaymentCard findCardByIdOrThrow(UUID id) {
