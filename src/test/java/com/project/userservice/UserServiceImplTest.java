@@ -19,6 +19,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.cache.CacheManager;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -38,6 +39,9 @@ class UserServiceImplTest {
 
     @Mock
     private UserMapper userMapper;
+
+    @Mock
+    private CacheManager cacheManager;
 
     @InjectMocks
     private UserServiceImpl userService;

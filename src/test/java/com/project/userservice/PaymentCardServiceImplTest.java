@@ -20,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.cache.CacheManager;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -40,6 +41,9 @@ class PaymentCardServiceImplTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private CacheManager cacheManager;
 
     @Mock
     private PaymentCardMapper paymentCardMapper;
