@@ -40,12 +40,14 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       
-      - DB_HOST=postgres
+      - DB_HOST=host.docker.internal
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
-      - REDIS_HOST=redis
+      - REDIS_HOST=host.docker.internal
       - REDIS_PORT=${REDIS_PORT}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       postgres:
         condition: service_healthy
