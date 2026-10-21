@@ -3,6 +3,7 @@
 --changeset alexv44:002_create_payment_cards_table
 CREATE TABLE payment_cards (
     id UUID PRIMARY KEY,
+    number VARCHAR(255) NOT NULL UNIQUE,
     user_id UUID NOT NULL,
     holder VARCHAR(255) NOT NULL,
     expiration_date DATE NOT NULL,
