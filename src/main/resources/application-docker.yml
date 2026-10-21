@@ -5,14 +5,14 @@ spring:
     password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
     hikari:
-      connection-timeout: 30000 # Увеличиваем тайм-аут ожидания соединения до 30 секунд
+      connection-timeout: 30000
       validation-timeout: 5000
       initialization-fail-timeout: 60000
 
   data:
     redis:
       host: ${REDIS_HOST}
-      port: ${REDIS_PORT}
+      port: ${REDIS_PORT:6379}
       password: ${REDIS_PASSWORD}
 
   jpa:
