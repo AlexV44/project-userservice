@@ -12,6 +12,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.UUID;
 
@@ -29,18 +30,21 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('admin') or @securityService.isOwner(#id)")
     public ResponseEntity<UserResponse> getUserById(@PathVariable UUID id) {
         UserResponse response = userService.getUserById(id);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/search-by-email")
+    @PreAuthorize("hasRole('admin')")
     public ResponseEntity<UserResponse> getUserByEmail(@RequestParam("email") String email) {
         UserResponse response = userService.getUserByEmail(email);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/search")
+    @PreAuthorize("hasRole('admin')")
     public ResponseEntity<Page<UserResponse>> searchUsers(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String surname,
@@ -50,6 +54,7 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
+    @PreAuthorize("hasRole('admin') or @securityService.isOwner(#id)")
     public ResponseEntity<UserResponse> updateUser(
             @PathVariable UUID id,
             @RequestBody UserUpdateRequest request) {
@@ -58,6 +63,7 @@ public class UserController {
     }
 
     @PatchMapping("/{id}/active")
+    @PreAuthorize("hasRole('admin')")
     public ResponseEntity<UserResponse> updateUserActiveStatus(
             @PathVariable UUID id,
             @RequestParam boolean active) {
@@ -66,6 +72,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('admin')")
     public ResponseEntity<Void> deleteUser(@PathVariable UUID id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
