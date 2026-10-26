@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://${DB_HOST}:5432/${DB_NAME}?connectTimeout=30
+    url: jdbc:postgresql://${DB_HOST}:${DB_PORT:5432}/${DB_NAME}?connectTimeout=30
     username: ${DB_USER}
     password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
@@ -13,7 +13,7 @@ spring:
     redis:
       host: ${REDIS_HOST}
       port: ${REDIS_PORT:6379}
-      password: ${REDIS_PASSWORD}
+      password: ${REDIS_PASSWORD:}
 
   jpa:
     hibernate:
@@ -27,4 +27,5 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: ${KEYCLOAK_ISSUER_URI}  
+          issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8080/realms/auth-realm}
+          jwk-set-uri: http://host.docker.internal:8080/realms/auth-realm/protocol/openid-connect/certs
