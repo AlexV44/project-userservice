@@ -9,7 +9,7 @@ services:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
@@ -18,41 +18,47 @@ services:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
       interval: 3s
       timeout: 3s
-      retries: 10  
+      retries: 10
 
   redis:
     image: redis:7-alpine
     container_name: redis_cache
     restart: unless-stopped
     ports:
-      - "6379:6379"
+      - "${REDIS_PORT:-6379}:6379"
     volumes:
       - redis_data:/data
     networks:
       - app-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
 
   app:
     build: .
     container_name: user_service_app
     restart: unless-stopped
     ports:
-      - "8080:8080"
+      - "8081:8080"
     environment:
-      - SPRING_PROFILES_ACTIVE=docker
-      
-      - DB_HOST=host.docker.internal
-      - DB_NAME=${DB_NAME}
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - REDIS_HOST=host.docker.internal
-      - REDIS_PORT=${REDIS_PORT}
+      SPRING_PROFILES_ACTIVE: docker
+      KEYCLOAK_ISSUER_URI: https://crispy-space-telegram-j64p4qr5g6429pp-8080.app.github.dev/realms/auth-realm
+      DB_HOST: host.docker.internal
+      DB_PORT: 5433
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      REDIS_HOST: host.docker.internal
+      REDIS_PORT: ${REDIS_PORT:-6379}
     extra_hosts:
       - "host.docker.internal:host-gateway"
     depends_on:
       postgres:
         condition: service_healthy
       redis:
-        condition: service_started
+        condition: service_healthy
     networks:
       - app-network
 
@@ -62,4 +68,4 @@ volumes:
 
 networks:
   app-network:
-    driver: bridge
+    external: true
