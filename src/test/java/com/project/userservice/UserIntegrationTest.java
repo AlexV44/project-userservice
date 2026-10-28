@@ -40,6 +40,10 @@ public class UserIntegrationTest {
     void setUp() {
         paymentCardRepository.deleteAll();
         userRepository.deleteAll();
+        restTemplate.getRestTemplate().getInterceptors().add((request, body, execution) -> {
+            request.getHeaders().setBearerAuth("integration-test-token");
+            return execution.execute(request, body);
+        });
     }
 
     @Test
