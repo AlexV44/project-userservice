@@ -12,7 +12,7 @@ public record UserResponse(
         String name,
         String surname,
         String email,
-        boolean active,
+        Boolean active,
         LocalDate birthday,
         List<PaymentCardResponse> paymentCards,
         LocalDateTime createdAt,
