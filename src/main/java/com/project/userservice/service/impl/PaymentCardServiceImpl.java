@@ -21,6 +21,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -74,6 +75,7 @@ public class PaymentCardServiceImpl implements PaymentCardService {
     }
 
     @Override
+    @PreAuthorize("hasRole('admin') or @securityService.isOwner(#userId)")
     public List<PaymentCardResponse> getAllCardsByUserId(UUID userId) {
         if(!userRepository.existsById(userId)) {
             throw new UserNotFoundException(userId);

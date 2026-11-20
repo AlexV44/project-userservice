@@ -27,5 +27,5 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8080/realms/auth-realm}
-          jwk-set-uri: http://host.docker.internal:8080/realms/auth-realm/protocol/openid-connect/certs
+          issuer-uri: http://localhost:8080/realms/auth-realm
+          jwk-set-uri: http://keycloak:8080/realms/auth-realm/protocol/openid-connect/certs
