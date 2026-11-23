@@ -10,7 +10,6 @@ import org.mapstruct.*;
         uses = {PaymentCardMapper.class}
 )
 public interface UserMapper {
-    @Mapping(target = "id", ignore = true)
     @Mapping(target = "active", ignore = true)
     @Mapping(target = "paymentCards", ignore = true)
     @Mapping(target = "createdAt", ignore = true)

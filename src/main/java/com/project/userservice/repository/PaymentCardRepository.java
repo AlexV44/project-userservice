@@ -1,7 +1,6 @@
 package com.project.userservice.repository;
 
 import com.project.userservice.entity.PaymentCard;
-import com.project.userservice.entity.enums.PaymentCardStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -18,4 +17,6 @@ public interface PaymentCardRepository extends JpaRepository<PaymentCard, UUID> 
     @Modifying
     @Query(value = "UPDATE payment_cards SET active = :active WHERE id = :id", nativeQuery = true)
     int updateCardActiveStatus(@Param("id") UUID id, @Param("active") boolean active);
+
+    boolean existsByIdAndUser_Id(UUID id, UUID userId);
 }

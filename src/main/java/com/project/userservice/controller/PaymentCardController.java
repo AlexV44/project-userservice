@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class PaymentCardController {
     private final PaymentCardService cardService;
 
     @PostMapping("/user/{userId}")
+    @PreAuthorize("hasRole('admin') or @securityService.isOwner(#userId)")
     public ResponseEntity<PaymentCardResponse> addCardToUser(
             @PathVariable UUID userId,
             @Valid @RequestBody PaymentCardRequest request) {
@@ -31,18 +33,21 @@ public class PaymentCardController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('admin') or @securityService.isCardOwner(#id)")
     public ResponseEntity<PaymentCardResponse> getCardById(@PathVariable UUID id) {
         PaymentCardResponse card = cardService.getCardById(id);
         return ResponseEntity.ok(card);
     }
 
     @GetMapping("/user/{userId}")
+    @PreAuthorize("hasRole('admin') or @securityService.isOwner(#userId)")
     public ResponseEntity<List<PaymentCardResponse>> getAllCardsByUserId(@PathVariable UUID userId) {
         List<PaymentCardResponse> response = cardService.getAllCardsByUserId(userId);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('admin')")
     public ResponseEntity<Page<PaymentCardResponse>> getAllCards(
             @PageableDefault(size = 20, sort = "createdAt") Pageable pageable) {
         Page<PaymentCardResponse> cardsPage = cardService.getAllCards(pageable);
@@ -50,6 +55,7 @@ public class PaymentCardController {
     }
 
     @PatchMapping("/{id}/active")
+    @PreAuthorize("hasRole('admin')")
     public ResponseEntity<PaymentCardResponse> updateUserActiveStatus(
             @PathVariable UUID id,
             @RequestParam boolean active) {
@@ -58,6 +64,7 @@ public class PaymentCardController {
     }
 
     @DeleteMapping("/user/{userId}/{cardId}")
+    @PreAuthorize("hasRole('admin') or (@securityService.isOwner(#userId) and @securityService.isCardOwner(#cardId))")
     public ResponseEntity<Void> deleteCard(
             @PathVariable UUID userId,
             @PathVariable UUID cardId) {

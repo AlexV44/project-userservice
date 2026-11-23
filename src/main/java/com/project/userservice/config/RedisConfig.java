@@ -20,22 +20,16 @@ public class RedisConfig {
     @Bean
     public RedisCacheManagerBuilderCustomizer redisCacheManagerBuilderCustomizer() {
         return builder -> {
-            // 1. Создаем и настраиваем ObjectMapper
             ObjectMapper objectMapper = new ObjectMapper();
-
-            // Поддержка Java 8 Date/Time API (LocalDate, LocalDateTime и т.д.)
+            
             objectMapper.registerModule(new JavaTimeModule());
 
-            // Игнорируем новые поля при десериализации (защита при деплое новых версий DTO)
             objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-            // 2. Создаем JSON-сериализатор через стандартную фабрику Spring Data Redis,
-            // передавая ей наш готовый ObjectMapper. Это заменяет устаревший GenericJackson2JsonRedisSerializer.
             RedisSerializer<Object> jsonSerializer = RedisSerializer.json();
 
-            // 3. Настраиваем глобальные параметры кэша
             RedisCacheConfiguration defaultCacheConfig = RedisCacheConfiguration.defaultCacheConfig()
-                    .entryTtl(Duration.ofMinutes(10)) // TTL по умолчанию
+                    .entryTtl(Duration.ofMinutes(10))
                     .serializeKeysWith(
                             RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer())
                     )
