@@ -50,7 +50,7 @@ class UserServiceImplTest {
     void createUser_shouldSuccessfullyCreateAndReturnUser() {
         UUID userId = UUID.randomUUID();
         LocalDate birthday = LocalDate.of(1995, 5, 12);
-        UserCreateRequest request = new UserCreateRequest("Иван", "Иванов", "ivan@test.com", birthday);
+        UserCreateRequest request = new UserCreateRequest(UUID.randomUUID(), "Иван", "Иванов", "ivan@test.com", birthday);
 
         User userEntity = new User();
         User savedUser = new User();
@@ -76,7 +76,7 @@ class UserServiceImplTest {
 
     @Test
     void createUser_shouldThrowException_whenEmailAlreadyExists() {
-        UserCreateRequest request = new UserCreateRequest("Петр", "Петров", "existing@test.com", LocalDate.of(1990, 1, 1));
+        UserCreateRequest request = new UserCreateRequest(UUID.randomUUID(), "Петр", "Петров", "existing@test.com", LocalDate.of(1990, 1, 1));
         when(userRepository.existsByEmail("existing@test.com")).thenReturn(true);
 
         assertThatThrownBy(() -> userService.createUser(request))

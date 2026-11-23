@@ -49,6 +49,7 @@ public class UserIntegrationTest {
     @Test
     void shouldExecuteFullUserJourneySuccessfully() {
         UserCreateRequest createUserRequest = new UserCreateRequest(
+                UUID.randomUUID(),
                 "Алексей",
                 "Смирнов",
                 "alex.journey@test.com",

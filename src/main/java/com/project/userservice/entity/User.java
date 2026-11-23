@@ -22,8 +22,6 @@ import java.util.UUID;
 @SuperBuilder
 public class User extends BaseAuditEntity {
     @Id
-    @GeneratedValue
-    @UuidGenerator(style = UuidGenerator.Style.TIME)
     private UUID id;
 
     @NotBlank(message = "Provide valid name")
